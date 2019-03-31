@@ -1,61 +1,74 @@
 import React from 'react'
-import Search from './Search'
-import CurrentShelf from './CurrentShelf'
-import WantShelf from './WantShelf'
-import ReadShelf from './ReadShelf'
 import { Route } from 'react-router-dom'
-import { Link } from 'react-router-dom'
- import * as BooksAPI from './BooksAPI'
+import SearchBooks from './SearchBooks'
+import Library from './Library'
+import * as BooksAPI from './BooksAPI'
 import './App.css'
 
+// JSON.stringify(object)
+// to display a JS object on the website for debugging!!
 
 class BooksApp extends React.Component {
-  
   state = {
-    books: []
+    books: [],
+    mappedBooks: {},
+    shelves: {
+      currentlyReading: [],
+      wantToRead: [],
+      read: [],
+    },
+    loading: true,
   }
 
-  //LifeCycle AJAX call
+  fetchBooks() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({
+        loading: false,
+        books: books,
+        mappedBooks: this.mapBooksToId(books),
+        shelves: {
+          currentlyReading: this.assignBooksToShelf(books, 'currentlyReading'),
+          wantToRead: this.assignBooksToShelf(books, 'wantToRead'),
+          read: this.assignBooksToShelf(books, 'read')
+        }
+      })
+      // checkup if all arrives well.
+      console.log(this.state.shelves.read)
+      console.log(this.state.shelves.wantToRead)
+      console.log(this.state.books)
+      console.log(this.state.mappedBooks)
+    })
+  }
+
+  mapBooksToId(books) {
+  // creates a mapping of each book ID to the data of the associated book
+  // allows for easier handling of book objects
+    var mappedBooks = {}
+    for (var i=0; i < books.length; i++) {
+      mappedBooks[books[i].id] = books[i]
+    }
+    return mappedBooks
+  }
+
+  assignBooksToShelf(books, shelf) {
+  // This function lets us track which books belong in which shelves.
+    return books.filter(book => book.shelf === shelf).map(book => book.id)
+  }
+
   componentDidMount() {
-    BooksAPI.getAll()
-      .then((books) => {
-        this.setState(() => ({
-          books
-        }))
-      })
-  }
-
-  searchBook = (book) => {
-    BooksAPI.search(book)
-      .then((book) => {
-        this.setState((currentState) => ({
-          books: currentState.books.concat([book])
-        }))
-      })
+    this.fetchBooks()
   }
 
   render() {
     return (
       <div className="app">
         <Route path='/search' render={({ history }) => (
-          <Search books={this.state.books}/>
+          <SearchBooks books={this.state.books}/>
         )} />
         <Route exact path='/' render={() => (
-          <div className="list-books">
-            <div className="list-books-title">
-              <h1>MyReads</h1>
-            </div>
-            <div className="list-books-content">
-              <div>
-                <CurrentShelf />
-                <WantShelf />
-                <ReadShelf />
-              </div>
-            </div>
-            <Link to='/search' className="open-search">
-              <button>Add a book</button>
-            </Link>
-          </div>
+          <Library mappedBooks={this.state.mappedBooks}
+                     shelves={this.state.shelves}
+          />
         )} />
       </div>
     )

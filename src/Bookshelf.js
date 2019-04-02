@@ -11,9 +11,9 @@ class Bookshelf extends Component {
         <h2 className="bookshelf-title">{this.props.name}</h2>
         <div className="bookshelf-books">
           <ol className="books-grid">
-            { this.props.shelf.map((bookId) => (
-                <li key={bookId}>
-                  <Book book={this.props.mappedBooks[bookId]} />
+            { this.props.books.map((book) => (
+                <li key={book.id}>
+                  <Book book={book} onShelfChange={this.props.onShelfChange} />
                 </li>
             ))}
           </ol>

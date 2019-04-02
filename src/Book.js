@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 
-class Book extends Component {
+function Book(props) {
 
-    render() {
         return (
             <div className="book">
                 <div className="book-top">
@@ -10,12 +9,13 @@ class Book extends Component {
                         style={{
                             width: 128,
                             height: 193,
-                            backgroundImage: `url(${this.props.book.imageLinks.thumbnail})`
+                            backgroundImage: `url(${props.book.imageLinks.thumbnail})`
                         }}>
                     </div>
                     <div className="book-shelf-changer">
                         <select
-                            value={this.props.book.shelf}
+                            value={props.book.shelf}
+                            onChange={(e) => props.onShelfChange(props.book, e.target.value)} //Pass entire book and the value of currentlyReading, read, etc..
                         >
                             <option value="none" disabled>Move to...</option>
                             <option value="currentlyReading">Currently Reading</option>
@@ -25,13 +25,12 @@ class Book extends Component {
                         </select>
                     </div>
                 </div>
-                <div className="book-title">{this.props.book.title}</div>
-                {this.props.book.authors.map((author, i) => (
+                <div className="book-title">{props.book.title}</div>
+                {props.book.authors.map((author, i) => (
                     <div className="book-authors" key={i}>{author}</div>
                 ))}
             </div>
         )
-    }
-}
+ }
 
 export default Book

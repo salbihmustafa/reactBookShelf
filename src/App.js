@@ -6,17 +6,11 @@ import * as BooksAPI from './BooksAPI'
 import './App.css'
 
 // JSON.stringify(object)
-// to display a JS object on the website for debugging!!
+// to display a JS object on the website for debugging
 
 class BooksApp extends React.Component {
   state = {
     books: [],
-    mappedBooks: {},
-    shelves: {
-      currentlyReading: [],
-      wantToRead: [],
-      read: [],
-    },
     loading: true,
   }
 
@@ -24,51 +18,36 @@ class BooksApp extends React.Component {
     BooksAPI.getAll().then((books) => {
       this.setState({
         loading: false,
-        books: books,
-        mappedBooks: this.mapBooksToId(books),
-        shelves: {
-          currentlyReading: this.assignBooksToShelf(books, 'currentlyReading'),
-          wantToRead: this.assignBooksToShelf(books, 'wantToRead'),
-          read: this.assignBooksToShelf(books, 'read')
-        }
-      })
-      // checkup if all arrives well.
-      console.log(this.state.shelves.read)
-      console.log(this.state.shelves.wantToRead)
+        books: books
+      });
+      // check if all arrives well.
       console.log(this.state.books)
-      console.log(this.state.mappedBooks)
     })
-  }
-
-  mapBooksToId(books) {
-  // creates a mapping of each book ID to the data of the associated book
-  // allows for easier handling of book objects
-    var mappedBooks = {}
-    for (var i=0; i < books.length; i++) {
-      mappedBooks[books[i].id] = books[i]
-    }
-    return mappedBooks
-  }
-
-  assignBooksToShelf(books, shelf) {
-  // This function lets us track which books belong in which shelves.
-    return books.filter(book => book.shelf === shelf).map(book => book.id)
   }
 
   componentDidMount() {
     this.fetchBooks()
   }
 
+  //Call back function implemented in Book.js
+  onShelfChange = (book, shelf) =>  {
+    console.log("On shelf: " + shelf)
+    book.shelf = shelf;
+    //Calling the API to make sure books are updated when changed shelf
+    BooksAPI.update(book, shelf).then(() => {
+        this.setState((currentState) => ({
+            books: currentState.books.filter(b => b.id !== book.id).concat([book])
+        }))
+    });
+  }
+
   render() {
     return (
       <div className="app">
-        <Route path='/search' render={({ history }) => (
-          <SearchBooks books={this.state.books}/>
+        <Route path='/search' render={({ history }) => (<SearchBooks books={this.state.books}/>
         )} />
         <Route exact path='/' render={() => (
-          <Library mappedBooks={this.state.mappedBooks}
-                     shelves={this.state.shelves}
-          />
+          <Library books={this.state.books} onShelfChange={this.onShelfChange} />
         )} />
       </div>
     )

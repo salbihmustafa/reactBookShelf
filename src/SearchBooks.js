@@ -17,13 +17,23 @@ class SearchBooks extends Component {
         const newText = event.target.value.trim();
         this.setState({ query: newText });
         if (newText.length > 0) {
-            search(newText).then(searchBooks => {
+            search(newText).then(searchBooks => { //Imported function from BooksAPI
                 if (searchBooks.length > 0) {
+                    this.props.books.map((homeBook) => (
+                        searchBooks.map((aBook) => (
+                            this.setState((currentState) => ({
+                                searchBooks: currentState
+                            }))
+                        ))
+                    ))
+                    console.log(this.state.searchBooks.map(a => (
+                        a.id
+                    )))
                     // map over the bookOnHomePage
                     // map over the bookOnSearchPage
                     // check bookOnHomePage.id === bookOnSearchPage.id
                     // Match the shelf bookOnSearchPage.shelf = bookOnHomePage.shelf
-                    this.setState({ searchBooks, visibleText: true });
+                    //this.setState({ searchBooks, visibleText: true });
                 }
             });
         } else {
@@ -49,8 +59,8 @@ class SearchBooks extends Component {
                 <div className="search-books-results">
                     {this.state.visibleText &&
                         <ol className="books-grid">
-                            {this.state.searchBooks.map((book, i) => (
-                                <Book />
+                            {this.state.searchBooks.map((book) => (
+                                <Book book={book} onShelfChange={this.props.onShelfChange}/>
                             ))}
                         </ol>
                     }

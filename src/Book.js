@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 
 function Book(props) {
 
+    //Testing Purposes
+    //console.log(props.book.shelf);
+
     return (
         <div className="book">
             <div className="book-top">
@@ -14,7 +17,7 @@ function Book(props) {
                 </div>
                 <div className="book-shelf-changer">
                     <select
-                        value={props.book.shelf} //Value from props passed - the correct shelf
+                        value={props.book.shelf} //Value from props passed - the correct shelf. The value gets passed to the option values.
                         onChange={(e) => props.onShelfChange(props.book, e.target.value)} //Pass entire book and the value of currentlyReading, read, etc..
                     >
                         <option value="none" disabled>Move to...</option>

@@ -7,36 +7,41 @@ import { search } from './BooksAPI'
 
 class SearchBooks extends Component {
 
-    state = {
-        query: "",
-        searchBooks: [],
-        visibleText: false
+    constructor(props){
+        super(props);
+
+        this.state = {
+            query: "", //Query being typed by user
+            searchBooks: [], //Array of books in the search API
+            visibleText: false //Whether or not we are displaying the books on the search page
+        }
     }
 
     runSearch = event => {
         const newText = event.target.value.trim();
         this.setState({ query: newText });
         if (newText.length > 0) {
-            search(newText).then(searchBooks => { //Imported function from BooksAPI
-                if (searchBooks.length > 0) {
-                    this.props.books.map((homeBook) => (
-                        searchBooks.map((aBook) => (
-                            this.setState((currentState) => ({
-                                searchBooks: currentState
-                            }))
+            search(newText).then(books => { //Imported function from BooksAPI
+                if (books.length > 0) {
+                    //Initially set shelf
+                    books.map(b => (
+                        b.shelf = 'none'
+                    ))
+                    //Set the books that are on the home page to the shelf that it is already assigned to.
+                    this.props.books.map(homeBook => (
+                        books.map(b => (
+                            (b.id == homeBook.id) ? (b.shelf = homeBook.shelf) : b.shelf = 'none'
                         ))
                     ))
-                    console.log(this.state.searchBooks.map(a => (
-                        a.id
-                    )))
-                    // map over the bookOnHomePage
-                    // map over the bookOnSearchPage
-                    // check bookOnHomePage.id === bookOnSearchPage.id
-                    // Match the shelf bookOnSearchPage.shelf = bookOnHomePage.shelf
-                    //this.setState({ searchBooks, visibleText: true });
+                    //Set the state but filter on the authors that have undefined. That is why I did != null
+                    this.setState({
+                        searchBooks: books.filter(b => b.authors != null),
+                        visibleText: true
+                    })
                 }
             });
         } else {
+            console.log("visibleText set to false");
             this.setState({ visibleText: false });
         }
     };

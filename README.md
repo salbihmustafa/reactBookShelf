@@ -1,10 +1,10 @@
 # MyReads Project
 
-This is the starter template for the final assessment project for Udacity's React Fundamentals course. The goal of this template is to save you time by providing a static example of the CSS and HTML markup that may be used, but without any of the React code that is needed to complete the project. If you choose to start with this template, your job will be to add interactivity to the app by refactoring the static code in this template.
+This application has a library of books. The user is allowed to search for books (SEARCH_TERMS.md) and put the book in the following shelves, currently reading, want to read, or read. When the user is on the home page, the user can shuffle the books in each category.
 
 Of course, you are free to start this project from scratch if you wish! Just be sure to use [Create React App](https://github.com/facebookincubator/create-react-app) to bootstrap the project.
 
-## TL;DR
+## Get Started
 
 To get started developing right away:
 
@@ -31,6 +31,10 @@ To get started developing right away:
     │   └── arrow-drop-down.svg
     ├── index.css # Global styles. You probably won't need to change anything here.
     └── index.js # You should not need to modify this file. It is used for DOM rendering only.
+    └── Library.js # This is a component that preps the books into certain bookshelves and passes props to Bookshelf.js.
+    └── Bookshelf.js # This is a component that determines what bookshelf each book is in.
+    └── Book.js # This lists out all the books based on the action made by the user, whether searched, or on the home page.
+    └── SearchBooks.js # This allows users to search for a book and add it to a certain shelf.
 ```
 
 Remember that good React design practice is to create new JS files for each component and use import/require statements to include them where they are needed.

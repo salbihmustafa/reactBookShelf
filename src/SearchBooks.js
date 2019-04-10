@@ -13,15 +13,17 @@ class SearchBooks extends Component {
         this.state = {
             query: "", //Query being typed by user
             searchBooks: [], //Array of books in the search API
-            visibleText: false //Whether or not we are displaying the books on the search page
+            visibleText: false, //Whether or not we are displaying the books on the search page
+            hasError: false //Error handling
         }
     }
 
     runSearch = event => {
-        const newText = event.target.value.trim();
+        const newText = event.target.value;
         this.setState({ query: newText });
         if (newText.length > 0) {
             search(newText).then(books => { //Imported function from BooksAPI
+                console.log(books.length);
                 if (books.length > 0) {
                     //Initially set shelf
                     books.map(b => (
@@ -39,10 +41,13 @@ class SearchBooks extends Component {
                         visibleText: true
                     })
                 }
+                else if(books.length == null) {
+                    this.setState({ visibleText: false, hasError: true }); //When the users query doesn't match the results in BookAPI throw error
+                }
             });
         } else {
             console.log("visibleText set to false");
-            this.setState({ visibleText: false });
+            this.setState({ visibleText: false, hasError: false }); //Don't show books and reset error message about false query
         }
     };
 
@@ -52,13 +57,7 @@ class SearchBooks extends Component {
                 <div className="search-books-bar">
                     <Link className="close-search" to="/">Close</Link>
                     <div className="search-books-input-wrapper">
-                        <input
-                            type="text"
-                            placeholder="Search by title or author"
-                            value={this.state.query}
-                            onChange={this.runSearch}
-                        />
-
+                        <input type="text" placeholder="Search by title or author" value={this.state.query} onChange={this.runSearch} multiple></input>
                     </div>
                 </div>
                 <div className="search-books-results">
@@ -68,6 +67,9 @@ class SearchBooks extends Component {
                                 <Book book={book} onShelfChange={this.props.onShelfChange}/>
                             ))}
                         </ol>
+                    }
+                    {this.state.hasError &&
+                        <h1>No Books Found</h1>
                     }
                 </div>
             </div>

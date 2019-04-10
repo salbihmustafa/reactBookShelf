@@ -25,6 +25,14 @@ class SearchBooks extends Component {
             search(newText).then(books => { //Imported function from BooksAPI
                 console.log(books.length);
                 if (books.length > 0) {
+                    
+                    books.filter(b => { 
+                        if(b.imageLinks.thumbnail == null) 
+                        {
+                            b.imageLinks.thumbnail = `Default`
+                            console.log(b)
+                        }
+                    })
                     //Initially set shelf
                     books.map(b => (
                         b.shelf = 'none'

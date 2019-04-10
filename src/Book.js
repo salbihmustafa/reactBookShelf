@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 function Book(props) {
 
     //Testing Purposes
-    //console.log(props.book.shelf);
+    //console.log(props.book.imageLinks.thumbnail);
 
     return (
         <div className="book">

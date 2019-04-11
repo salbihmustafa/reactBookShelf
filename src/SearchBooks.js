@@ -27,9 +27,11 @@ class SearchBooks extends Component {
                 if (books.length > 0) {
                     
                     books.filter(b => { 
-                        if(b.imageLinks.thumbnail == null) 
-                        {
-                            b.imageLinks.thumbnail = `Default`
+                        if(b.imageLinks == null) 
+                        {   
+                            b.imageLinks = []
+                            b.imageLinks.thumbnail = "default"
+                            b.imageLinks.smallThumbnail = "default"
                             console.log(b)
                         }
                     })

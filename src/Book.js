@@ -20,7 +20,7 @@ function Book(props) {
                         value={props.book.shelf} //Value from props passed - the correct shelf. The value gets passed to the option values.
                         onChange={(e) => props.onShelfChange(props.book, e.target.value)} //Pass entire book and the value of currentlyReading, read, etc..
                     >
-                        <option value="none" disabled>Move to...</option>
+                        <option value="moveTo" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
                         <option value="wantToRead">Want to Read</option>
                         <option value="read">Read</option>

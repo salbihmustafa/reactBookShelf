@@ -35,16 +35,13 @@ class SearchBooks extends Component {
                             console.log(b)
                         }
                     })
-                    //Initially set shelf
-                    books.map(b => (
-                        b.shelf = 'none'
-                    ))
-                    //Set the books that are on the home page to the shelf that it is already assigned to.
+
                     this.props.books.map(homeBook => (
                         books.map(b => (
-                            (b.id == homeBook.id) ? (b.shelf = homeBook.shelf) : b.shelf = 'none'
+                            b.shelf = (b.id === homeBook.id) ? homeBook.shelf : 'none'
                         ))
                     ))
+
                     //Set the state but filter on the authors that have undefined. That is why I did != null
                     this.setState({
                         searchBooks: books.filter(b => b.authors != null),
